@@ -2,22 +2,21 @@ name: 🔀 Plugin repository
 
 on:
   repository_dispatch:
-    types: [merge-plugins]
+    types: [ merge-plugins ]
 
 jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
       - run: >
-         echo ${{ github.event.client_payload.name }}
-         echo ${{ github.event.client_payload.version }}
-         echo ${{ github.event.client_payload.url }}
+          echo ${{ github.event.client_payload.name }}
+          echo ${{ github.event.client_payload.version }}
+          echo ${{ github.event.client_payload.url }}
 
       - name: Get source code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          token: ${{ secrets.BOT_HUB_TOKEN }}  # Important to launch CI on a commit from a bot
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v2.2.2
@@ -34,6 +33,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Publish QGIS Plugin ${{ github.event.client_payload.name }} ${{ github.event.client_payload.version }}"
-          commit_user_name: ${{ secrets.BOT_NAME }}
-          commit_user_email: ${{ secrets.BOT_MAIL }}
-          commit_author: ${{ secrets.BOT_NAME }}
+          commit_user_name: ${{ secrets.CI_BOT_NAME }}
+          commit_user_email: ${{ secrets.CI_BOT_MAIL }}
+          commit_author: ${{ secrets.CI_BOT_NAME }}
