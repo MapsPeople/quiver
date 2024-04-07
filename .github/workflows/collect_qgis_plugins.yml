@@ -14,14 +14,15 @@ jobs:
           echo ${{ github.event.client_payload.url }}
 
       - name: Get source code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.CI_BOT_PAT }}  # Important to launch CI on a commit from a bot
 
       - name: Set up Python 3.8
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: "3.10"
 
       - name: Install qgis-plugin-repo
         run: pip3 install qgis-plugin-repo
@@ -30,9 +31,6 @@ jobs:
         run: qgis-plugin-repo merge ${{ github.event.client_payload.url }} plugins.xml
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Publish QGIS Plugin ${{ github.event.client_payload.name }} ${{ github.event.client_payload.version }}"
-          commit_user_name: ${{ secrets.CI_BOT_NAME }}
-          commit_user_email: ${{ secrets.CI_BOT_MAIL }}
-          commit_author: ${{ secrets.CI_BOT_NAME }}
